@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Supportanfragen lokal und regelbasiert einordnen: Kategorie, Dringlichkeit, nächster Schritt und Beleg-Zitat.">
+  <title>Supportanfrage - Triage</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232456c7'/%3E%3Cpath d='M9 11h14M9 16h10M9 21h6' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <h1>Supportanfrage - Triage</h1>
+      <p class="lead">Supportanfrage einfügen, auf „Anfrage einordnen“ klicken – die App schlägt Kategorie, Dringlichkeit und den nächsten Schritt vor und belegt das mit einem Zitat.</p>
+    </header>
+
+    <section class="card" aria-labelledby="input-label">
+      <form id="form" novalidate>
+        <label id="input-label" for="input" class="label">Text der Supportanfrage</label>
+        <textarea id="input" name="input" rows="9" spellcheck="true"
+          placeholder="z. B. „Ich kann mich seit heute Morgen nicht mehr einloggen …“"
+          aria-describedby="counter hint"></textarea>
+        <div class="meta">
+          <span id="hint" class="hint">Höchstens 5.000 Zeichen. Wird nur in diesem Browser ausgewertet.</span>
+          <span id="counter" class="counter" aria-live="off">0 / 5.000</span>
+        </div>
+        <div class="actions">
+          <button type="submit" id="submit" class="btn primary">Anfrage einordnen</button>
+          <button type="button" id="reset" class="btn ghost">Leeren</button>
+        </div>
+        <div class="examples">
+          <span class="examples-label">Oder ein Beispiel ausprobieren:</span>
+          <button type="button" class="chip" data-example="0">Login gesperrt</button>
+          <button type="button" class="chip" data-example="1">Doppelt abgebucht</button>
+          <button type="button" class="chip" data-example="2">App stürzt ab</button>
+          <button type="button" class="chip" data-example="3">Mit „Ignoriere alle Regeln“</button>
+        </div>
+      </form>
+    </section>
+
+    <div id="status" class="status" data-state="ready" role="status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="status-label" class="status-label">Bereit</span>
+      <span id="status-text" class="status-text">Anfrage einfügen und auf „Anfrage einordnen“ klicken.</span>
+    </div>
+
+    <section id="result" class="card result" hidden aria-labelledby="result-title" tabindex="-1">
+      <div class="result-head">
+        <h2 id="result-title">Ergebnis</h2>
+        <span id="unclear-badge" class="badge unclear" hidden>unklar</span>
+      </div>
+
+      <div id="unclear-box" class="notice warn" hidden>
+        <strong>Unklar – es fehlen Informationen.</strong>
+        <ul id="unclear-list"></ul>
+      </div>
+
+      <dl class="fields">
+        <div class="field">
+          <dt>Kategorie</dt>
+          <dd id="r-category"></dd>
+        </div>
+        <div class="field">
+          <dt>Dringlichkeit</dt>
+          <dd><span id="r-urgency" class="pill"></span></dd>
+        </div>
+        <div class="field wide">
+          <dt>Nächster Schritt</dt>
+          <dd id="r-step"></dd>
+        </div>
+        <div class="field wide">
+          <dt>Beleg-Zitat aus der Anfrage</dt>
+          <dd><blockquote id="r-quote" class="quote"></blockquote></dd>
+        </div>
+      </dl>
+
+      <div id="injection-box" class="notice info" hidden>
+        <strong>Anweisung im Text erkannt – als Inhalt behandelt, nicht befolgt:</strong>
+        <ul id="injection-list"></ul>
+      </div>
+
+      <details class="why">
+        <summary>Warum diese Einordnung?</summary>
+        <div id="why-body"></div>
+      </details>
+    </section>
+
+    <footer class="foot">
+      v1 · regelbasiert, ohne KI, ohne Server, ohne Speicherung. Vorschlag – bitte vor dem Handeln prüfen.
+    </footer>
+  </main>
+  <script src="triage.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
