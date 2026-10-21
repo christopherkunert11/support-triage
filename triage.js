@@ -160,7 +160,11 @@
     }
     for (var i = 0; i < text.length; i++) {
       var c = text[i];
-      if (c === "\n") { push(i); start = i + 1; continue; }
+      // v2: Ein einzelner Umbruch gehört zum Satz (eingefügte Texte sind oft umbrochen); nur eine Leerzeile trennt Absätze
+      if (c === "\n") {
+        if (/^[ \t\r]*\n/.test(text.slice(i + 1))) { push(i); start = i + 1; }
+        continue;
+      }
       if (c === "." || c === "!" || c === "?" || c === "…") {
         var j = i;
         while (j + 1 < text.length && /[.!?…]/.test(text[j + 1])) j++;
